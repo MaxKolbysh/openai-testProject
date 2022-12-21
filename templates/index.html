@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<head>
+  <title>OpenAI Quickstart</title>
+  <link
+    rel="shortcut icon"
+    href="{{ url_for('static', filename='favicon-32x32.png') }}"
+  />
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
+  <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+</head>
+
+<body>
+  <!--<img src="{{ url_for('static', filename='dog.png') }}" class="icon" />-->
+
+    <img class="logomain" src="{{ url_for('static', filename='SGR logo.png') }}" class="icon" />
+
+  <lottie-player src="https://assets2.lottiefiles.com/packages/lf20_lphquaqr.json"  background="transparent"  speed="1"  style="width: 350px; height: 350px;"  loop  autoplay></lottie-player>
+  <h3>Some Service list</h3>
+  <div class="vertical-menu">
+    <a href="{{ url_for('namegen')}}" >Name generator</a>
+    <a href="{{ url_for('image')}}">Image generator</a>
+    <a href="{{ url_for('textgen')}}">Text generator</a>
+
+  </div>
+
+
+</body>

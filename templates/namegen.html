@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<head>
+  <title>OpenAI Quickstart</title>
+  <link
+    rel="shortcut icon"
+    href="{{ url_for('static', filename='favicon-32x32.png') }}"
+  />
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
+</head>
+
+<body>
+  <a class="logo" href="{{ url_for('index') }}">
+    <img src="{{ url_for('static', filename='SGR logo.png') }}" class="icon" />
+  </a>
+
+  <img src="{{ url_for('static', filename='undraw_artificial_intelligence_re_enpp.svg') }}" class="imageheader" />
+  <h3>Super name generator</h3>
+  <form action="/namegen" method="post">
+    <input type="text" name="animal" placeholder="Enter an animal" required />
+    <input type="submit" value="Generate names" />
+  </form>
+
+  {% if result %}
+
+  <div class="result">{{ result }}</div>
+  {% endif %}
+</body>

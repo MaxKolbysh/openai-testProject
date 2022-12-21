@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<head>
+  <title>OpenAI Quickstart</title>
+  <link
+    rel="shortcut icon"
+    href="{{ url_for('static', filename='favicon-32x32.png') }}"
+  />
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
+</head>
+
+<body>
+  <a class="logo" href="{{ url_for('index') }}">
+    <img src="{{ url_for('static', filename='SGR logo.png') }}" class="icon" />
+  </a>
+  <!--<img src="{{ url_for('static', filename='dog.png') }}" class="icon" /> -->
+  <img src="{{ url_for('static', filename='undraw_texting_re_l11n.svg') }}" class="imageheader" />
+  <h3>Sentence for text generation</h3>
+  <form action="/textgen" method="post">
+    <input type="text" name="textbody" placeholder="Enter a sentence"  required  />
+    <input type="submit" value="Generate text" />
+  </form>
+  {% if result %}
+  <div class="textbox">{{ result }}</div>
+  {% endif %}
+</body>
