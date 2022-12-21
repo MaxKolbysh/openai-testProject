@@ -60,4 +60,4 @@ jobs:
         with:
           app-name: 'openAitesting'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_F686130D2C4A42999599EFF035869282 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7986958906CB4E39AA8EC7C36CF9BB7A }}
