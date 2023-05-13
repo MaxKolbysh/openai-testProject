@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<head>
+    <title>OpenAI Quickstart</title>
+  <link
+    rel="shortcut icon"
+    href="{{ url_for('static', filename='favicon-32x32.png') }}"
+  />
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
+  </head>
+  <body>
+    <a class="logo" href="{{ url_for('index') }}">
+      <img src="{{ url_for('static', filename='SGR logo.png') }}" class="icon" />
+    </a>
+  <img src="{{ url_for('static', filename='dog.png') }}" class="icon" />
+  <h3>Description generator </h3>
+  <form action="/taskdescription" method="post">
+    <input type="text" name="word" placeholder="Enter a word" required />
+    <input type="submit" value="Generate description" />
+  </form>
+  {% if result %}
+  <div class="result column">{{ result }}</div>
+  {% endif %}
+</body>

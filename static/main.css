@@ -30,6 +30,10 @@ body {
   width: 68px;
 }
 
+.hero{
+  width: 30%;
+}
+
 .imageheader{
     width: 20em;
 
@@ -70,6 +74,12 @@ input[type="submit"] {
 .result {
   font-weight: bold;
   margin-top: 40px;
+}
+
+.column {
+  width: 50%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .imageresult{
