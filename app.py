@@ -1,11 +1,14 @@
 import os
 
-import openai
+
+from openai import OpenAI
+
 from flask import Flask, redirect, render_template, request, url_for
 import re
 app = Flask(__name__)
-openai.api_key = os.getenv("OPENAI_API_KEY")
 
+
+client=OpenAI(api_key = os.getenv("OPENAI_API_KEY"))
 
 @app.route("/", methods=("GET", "POST"))
 def index():
@@ -17,7 +20,7 @@ def index():
 def namegen():
     if request.method == "POST":
         animal = request.form["animal"]
-        response = openai.Completion.create(
+        response = client.completions.create(
             model="text-davinci-002",
             prompt=generate_prompt(animal),
             temperature=0.6,
@@ -32,12 +35,13 @@ def namegen():
 def image():
     if request.method == "POST":
         imagedescription = request.form["imagedescription"]
-        response = openai.Image.create(
+        response = client.images.generate(
+            model="dall-e-3",
             prompt=imagedescription,
             n=1,
-            size="512x512"
+            size="1024x1024"
         )
-        return redirect(url_for("image", result=response['data'][0]['url']))
+        return redirect(url_for("image", result=response.data[0].url))
 
     result = request.args.get("result")
     return render_template("image.html", result=result)
@@ -47,16 +51,17 @@ def image():
 def textgen():
     if request.method == "POST":
         textbody = request.form["textbody"]
-        response = openai.Completion.create(
-            model="text-davinci-002",
-            prompt=textbody,
-            temperature=0.7,
-            max_tokens=256,
-            top_p=1,
-            frequency_penalty=0,
-            presence_penalty=0
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                
+            ],
+            # max_tokens=25,
+            temperature=0.5
         )
-        return redirect(url_for("textgen", result=response.choices[0].text))
+        result = response.choices[0].message.content
+        return redirect(url_for("textgen", result=result))
 
     result = request.args.get("result")
     return render_template("textgen.html", result=result)
@@ -67,7 +72,7 @@ def materialsname():
 
     if request.method == "POST":
         word = request.form["word"]
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are construction material calculator."},
@@ -102,7 +107,7 @@ def taskdescription():
 
     if request.method == "POST":
         word = request.form["word"]
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are an English teacher."},
@@ -129,6 +134,40 @@ def taskdescription():
     result = request.args.get("result")
     # final = re.sub('word', '💬', result, flags=re.IGNORECASE)
     return render_template("taskdescription.html", result=result)
+
+
+@app.route("/description", methods=("GET", "POST"))
+def description():
+
+    if request.method == "POST":
+        word = request.form["word"]
+        response = client.chat.completions.create(
+            model="gpt-4",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+
+
+
+            ],
+            # max_tokens=25,
+            temperature=0.8
+
+
+        )
+        print(response)
+
+        return redirect(url_for("description", result=response))
+
+        # to check caps lock
+
+        # final = result.replace("Boredom", "💬")
+        print(response)
+    result = request.args.get("result")
+    # final = re.sub('word', '💬', result, flags=re.IGNORECASE)
+    return render_template("description.html", result=result)
+
+
+##print(openai.Model.list())
 
 
 def generate_prompt(animal):
