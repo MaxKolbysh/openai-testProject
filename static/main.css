@@ -71,6 +71,23 @@ input[type="submit"] {
   text-align: center;
   cursor: pointer;
 }
+input[type="file"] {
+  margin-bottom: 24px;
+  padding: 12px 0; 
+  color: #333;
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  text-align: center;
+  cursor: pointer;
+}
+
+input[type="file"]:hover {
+  background-color: #10a37f;
+}
+
+
+
 .result {
   font-weight: bold;
   margin-top: 40px;

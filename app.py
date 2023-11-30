@@ -1,4 +1,8 @@
 import os
+import base64
+from werkzeug.utils import secure_filename
+from flask import session
+
 
 
 from openai import OpenAI
@@ -6,6 +10,12 @@ from openai import OpenAI
 from flask import Flask, redirect, render_template, request, url_for
 import re
 app = Flask(__name__)
+
+# Generate a random secret key 
+app.secret_key = os.urandom(24) 
+
+UPLOAD_FOLDER = 'static/uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 client=OpenAI(api_key = os.getenv("OPENAI_API_KEY"))
@@ -33,6 +43,7 @@ def namegen():
 
 @app.route("/image", methods=("GET", "POST"))
 def image():
+    
     if request.method == "POST":
         imagedescription = request.form["imagedescription"]
         response = client.images.generate(
@@ -47,6 +58,72 @@ def image():
     return render_template("image.html", result=result)
 
 
+@app.route("/imageupload", methods=("GET", "POST"))
+def imageupload():
+    result = None
+    img_b64 = None
+    image_url = None
+
+    if request.method == "POST":
+        imageupload_text = request.form["imageupload"]
+        image = request.files["image"]
+
+        if image:
+            image_bytes = image.read()
+            img_b64 = base64.b64encode(image_bytes).decode('utf-8')
+            filename = secure_filename(image.filename)
+            image.seek(0)
+            image.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            image_url = f'{filename}'
+
+             # Delete the old image file if it exists
+            old_image = session.get('image')
+            if old_image:
+                os.remove(os.path.join(app.config['UPLOAD_FOLDER'], old_image))
+
+            # Store the new image filename in the session
+            session['image'] = filename
+
+            response = client.chat.completions.create(
+                model="gpt-4-vision-preview",
+                messages=[
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "text", "text": imageupload_text},
+                            {
+                                "type": "image_url",
+                                "image_url": {
+                                    "url": f"data:image/jpeg;base64,{img_b64}",
+                                },
+                            },
+                        ]
+                    }
+                ],
+                max_tokens=300,
+            )
+
+            result = response.choices[0].message.content
+            return redirect(url_for("imageupload", result=result, img_b64=image_url))
+
+    result = request.args.get("result")
+    img_b64 = request.args.get("img_b64")
+    print(img_b64)
+    return render_template("imageupload.html", result=result, img_b64=img_b64)
+
+@app.route("/delete_images")
+def delete_images():
+    upload_folder = app.config['UPLOAD_FOLDER']
+    files = os.listdir(upload_folder)
+    for file in files:
+        file_path = os.path.join(upload_folder, file)
+        os.remove(file_path)
+    return "Images deleted"
+
+
+
+
+
 @app.route("/textgen", methods=("GET", "POST"))
 def textgen():
     if request.method == "POST":
@@ -55,6 +132,7 @@ def textgen():
             model="gpt-3.5-turbo",
             messages=[
                 {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": textbody}
                 
             ],
             # max_tokens=25,

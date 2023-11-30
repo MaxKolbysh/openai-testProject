@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<head>
+  <title>OpenAI Quickstart</title>
+  <link
+    rel="shortcut icon"
+    href="{{ url_for('static', filename='favicon-32x32.png') }}"
+  />
+  <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}" />
+</head>
+
+<body>
+  <a class="logo" href="{{ url_for('index') }}">
+    <img src="{{ url_for('static', filename='SGR logo.png') }}" class="icon" />
+  </a>
+  {% if img_b64 %}
+  <!-- <img src="data:image/jpeg;base64,{{ img_b64 }}" /> -->
+  <img
+    src="{{ url_for('static', filename='uploads/' + img_b64) }}"
+    alt="here should be generated image"
+  />
+
+  {% else %}
+  <img
+    src="{{ url_for('static', filename='undraw_image_upload_re_w7pm.svg') }}"
+    class="imageheader"
+  />
+
+  {% endif %} {% if result %}
+
+  <div class="result column">{{ result }}</div>
+  {% endif %}
+
+  <h3>Image uload</h3>
+  <form
+    id="textform"
+    enctype="multipart/form-data"
+    action="/imageupload"
+    method="post"
+  >
+    <input type="file" name="image" />
+
+    <input
+      type="text"
+      name="imageupload"
+      placeholder="Question about image"
+      required
+    />
+    <input type="submit" value="Generate image description" />
+  </form>
+
+  <!--
+  <textarea rows="4" cols="50" name="imagedescription" form="textform" required>
+    Enter text here...</textarea>-->
+</body>
