@@ -79,7 +79,10 @@ def imageupload():
              # Delete the old image file if it exists
             old_image = session.get('image')
             if old_image:
-                os.remove(os.path.join(app.config['UPLOAD_FOLDER'], old_image))
+                image_path = os.path.join(app.config['UPLOAD_FOLDER'], old_image)
+                if os.path.exists(image_path):
+                    os.remove(image_path)
+
 
             # Store the new image filename in the session
             session['image'] = filename
