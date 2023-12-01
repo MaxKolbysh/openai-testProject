@@ -103,6 +103,10 @@ input[type="file"]:hover {
     width: 500px;
     height: 500px;
 }
+.imageupload {
+  width: 40vw;
+  height: auto;
+}
 
 .textbox{
     margin-top: 20px;

@@ -15,6 +15,7 @@
   {% if img_b64 %}
   <!-- <img src="data:image/jpeg;base64,{{ img_b64 }}" /> -->
   <img
+    class="imageupload"
     src="{{ url_for('static', filename='uploads/' + img_b64) }}"
     alt="here should be generated image"
   />
